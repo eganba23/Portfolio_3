@@ -80,9 +80,6 @@ sample_25_once <- sample(x = brown$brownmms, size = 25)
 mean(sample_9_once)
 mean(sample_25_once)
 
-
-#use replicate() to get multiple of them
-
 ```
 
 I replicated the samples but increased my sample sizes. In the lab, we asked students to find the mean of each sample and record it.
