@@ -1,0 +1,171 @@
+---
+title: "Piece_3"
+author: "Benjamin Egan"
+date: "2025-02-21"
+output: html_document
+---
+
+
+## Monte Carlo Simulation - Brown M&Ms
+
+As part of my responsibility as a TA for the PSY 312 course, I am responsible for the execution of lab exercises designed to aid in comprehension of topics learned during lecture. To help students understand probability, sampling, and the creation of a distribution of sample means, we did the "M&M Lab."
+
+In the M&M lab, students discovered that Mars, Inc. does not distribute the colors evenly within a bag of plain M&Ms. This depends upon which of two packaging plants (Cleveland or New Jersey) made the product.
+
+The back half of the lab has students run through a Monte Carlo Simulation to create a distribution of sample means using only brown M&Ms. Students are asked to create three samples with 1, 9, and 25 observations. We then plot them on a graph and see how the distribution looks.
+
+### The problem
+
+This normally works since there are 18 students, but Workday made it so my lab has only 9. To counteract this, I went in an manually simulated the other 9 students. Doing this was a pain, and I wanted to write a script that would do this for me.
+
+
+## The Solution
+
+```{r setup, message = FALSE, echo = FALSE}
+library(haven)
+library(tidyverse)
+library(ggplot2)
+```
+
+```{r read the data}
+brown <- read_spss("Brown_M&Ms_2025.sav")
+tibble(brown)
+```
+
+
+In the data set, each value represents the number of brown M&Ms in a packet. There are 300 "packets" in the data set. I created a histogram below.
+
+
+```{r initial visualtion, message = FALSE}
+
+brown %>%
+  ggplot(aes(
+    x = brownmms
+  ))+
+  geom_histogram(color = "black", fill = "tan")+
+  theme_bw()+
+  labs(
+    x = "Number of brown M&Ms in a pack",
+    y = NULL,
+    title = "Histogram of Brown M&M population"
+  )
+
+mean(brown$brownmms)
+sd(brown$brownmms)
+```
+
+Here we can see that the "population" of brown M&Ms is fairly spread out(sd = 4.96), and centered around 11.5.
+
+### Monte Carlo simulation
+
+The first step is to get a sample of 1.
+
+```{r monte sample size 1}
+set.seed(1234)
+sample(x = brown$brownmms, size = 1)
+
+#use replicate() to get multiple of them
+
+```
+
+By using the sample() function, I am able to randomly sample 1 packet from the 300. For replication purposes, I set the seed so I know that i will always get the same numbers. This time I got 10, representing the average number of brown M&Ms in a packet with a sample size of 1.
+
+I can also change the size of my sample.
+
+```{r monte sample size 9 and 25 }
+set.seed(1234)
+sample_9_once <- sample(x = brown$brownmms, size = 9)
+sample_25_once <- sample(x = brown$brownmms, size = 25)
+
+mean(sample_9_once)
+mean(sample_25_once)
+
+
+#use replicate() to get multiple of them
+
+```
+
+I replicated the samples but increased my sample sizes. In the lab, we asked students to find the mean of each sample and record it.
+
+### Replication
+
+It would be pointless to copy and paste the lines of code 27 times to simulate 9 students obtaining three samples. So instead, I used repeat() to do this for me.
+
+```{r replication basic}
+set.seed(1234)
+number <- 1
+
+repeat { 
+sample(x = brown$brownmms, size = 1) %>%
+  print()
+   number <- number + 1
+   if(number >3) { 
+      break
+   }} 
+
+```
+
+Here I was able to create a sample with size 1, and repeat this function three times, simulating one person. Since I don't need to distinguish between participants, I can do it 27 times, creating a list.
+
+```{r replication for size 1}
+set.seed(1234)
+number_size1 <- 1
+
+repeat { 
+sample(x = brown$brownmms, size = 1) %>%
+  print()
+   number_size1 <- number_size1 + 1
+   if(number_size1 >27) { 
+      break
+   }} 
+
+```
+
+Now we need to replicate this with sample sizes of 9 and 25. Copy and pasting the code while changing the code provides us with a problem. It's printing out each number in the sample and not providing us with the mean of the sample. 
+
+
+```{r replication for size 9 wrong}
+set.seed(1234)
+number_size9_wrong <- 1
+repeat { 
+sample(x = brown$brownmms, size = 9) %>%
+  print()
+   number_size9_wrong <- number_size9_wrong + 1
+   if(number_size9_wrong >27) { 
+      break
+   }} 
+
+```
+
+To fix this, I piped the sample function inside of mean() before piping into print.
+
+```{r replication for size 9 correct}
+set.seed(1234)
+size9_repeat <- 1
+repeat { 
+sample(x = brown$brownmms, size = 9) %>%
+    mean() %>%
+  print()
+   size9_repeat <- size9_repeat + 1
+   if(size9_repeat > 27) { 
+      break
+   }} 
+
+```
+
+Finally I can apply what I've learned to the sample size of 25.
+
+
+```{r replication for size 25}
+set.seed(1234)
+size25_repeat <- 1
+repeat { 
+sample(x = brown$brownmms, size = 25) %>%
+    mean() %>%
+  print()
+   size25_repeat <- size25_repeat + 1
+   if(size25_repeat > 27) { 
+      break
+   }} 
+
+```
