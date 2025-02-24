@@ -36,7 +36,7 @@ tibble(brown)
 In the data set, each value represents the number of brown M&Ms in a packet. There are 300 "packets" in the data set. I created a histogram below.
 
 
-```{r initial visualtion, message = FALSE}
+```{r initial visualtion 1, message = FALSE}
 
 brown %>%
   ggplot(aes(
@@ -53,6 +53,37 @@ brown %>%
 mean(brown$brownmms)
 sd(brown$brownmms)
 ```
+
+```{r initial visualtion, message = FALSE}
+brown %>%
+  ggplot(aes(brownmms)) +
+  geom_histogram(binwidth=.8, fill = "tan", color = "black") +
+  stat_bin(binwidth=.8, geom='text', color='black', aes(label=..count..),
+           position=position_stack(vjust = .5))
+
+mean(brown$brownmms)
+sd(brown$brownmms)
+```
+
+
+```{r 2}
+brown %>%
+  ggplot(aes(x = brownmms)) +
+  geom_histogram(binwidth = 0.8, fill = "tan", color = "black") +
+  geom_text(stat = "bin", binwidth = 0.8, aes(label = ifelse(..count.. > 0, ..count.., "")), 
+            vjust = -0.5, color = "black") +
+  theme_minimal()+
+  labs(
+    x = "Number of brown M&Ms in a pack",
+    y = NULL,
+    title = "Histogram of Brown M&M population"
+  )
+
+mean(brown$brownmms)
+sd(brown$brownmms)
+
+```
+
 
 Here we can see that the "population" of brown M&Ms is fairly spread out(sd = 4.96), and centered around 11.5.
 
