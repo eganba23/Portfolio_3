@@ -435,7 +435,8 @@ exist in the original dataset but are created during the plotting
 process. In this code, ..count.. is a special variable created by
 geom_histogram(stat = “bin”). It represents the number of observations
 (frequency) in each bin.</p>
-<p>Here is what chat spit out</p>
+<p>Here is what chat spit out, with the exception that I took out the
+specification of bin width.</p>
 <pre class="r"><code>brown %&gt;%
   ggplot(aes(x = brownmms)) +
   geom_histogram(fill = &quot;tan&quot;, color = &quot;black&quot;) +
